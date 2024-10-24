@@ -1,0 +1,27 @@
+type Exam {
+    id: ID!
+    title: String!
+    description: String!
+    authorId: String!
+}
+
+extend type Query {
+    getAllExams: [Exam]
+    getExamById(id: String!): Exam
+    getExamsByAuthorId(authorId: String!): [Exam]
+}
+
+extend type Mutation {
+    addExam(
+        title: String!,
+        description: String!,
+        authorId: String!
+    ): Exam
+
+    updateExam(
+        id: ID!,
+        title: String,
+        description: String
+        authorId: String
+    ): Exam
+}
