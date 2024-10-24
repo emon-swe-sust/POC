@@ -1,0 +1,28 @@
+type mcq {
+    id: ID!
+    question: String!
+    options: [String!]!
+    examId: ID!
+    answer: String!
+}
+
+extend type Query {
+    getAllMCQs: [mcq]
+    getMCQsByExamID(examId: String!): [mcq]
+}
+
+extend type Mutation {
+    addMCQ(
+        question: String!,
+        options: [String!]!,
+        examId: String!,
+        answer: String!
+    ): mcq
+
+    updateMCQ(
+        id: ID!,
+        options: [String!],
+        examId: String,
+        answer: String
+    ): mcq
+}
