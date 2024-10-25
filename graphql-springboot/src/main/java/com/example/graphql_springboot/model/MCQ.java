@@ -14,4 +14,5 @@ public class MCQ {
     private String question;
     private List<String> options;
     private String examId;
+    private String answer;
 }
