@@ -12,5 +12,6 @@ public class Exam {
     private String id;
     private String title;
     private String description;
+    private String author;
     private String authorId;
 }

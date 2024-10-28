@@ -1,17 +1,42 @@
 import { useForm } from "react-hook-form";
 import { classNames } from "./Nav";
-import { gql, useMutation } from "@apollo/client";
+import { gql, useMutation, useQuery } from "@apollo/client";
+import { List } from "./List";
 
 const ADD_EXAM = gql`
-  mutation AddExam($title: String!, $description: String!, $authorId: String!) {
-    addExam(title: $title, description: $description, authorId: $authorId) {
+  mutation AddExam(
+    $title: String!
+    $description: String!
+    $author: String!
+    $authorId: String!
+  ) {
+    addExam(
+      title: $title
+      description: $description
+      author: $author
+      authorId: $authorId
+    ) {
       id
       title
       description
+      author
       authorId
     }
   }
 `;
+
+const GET_EXAMS = gql`
+  query {
+    getAllExams {
+      id
+      title
+      description
+      author
+      authorId
+    }
+  }
+`;
+
 export const Exams = () => {
   const {
     register,
@@ -19,7 +44,8 @@ export const Exams = () => {
     handleSubmit,
     reset,
   } = useForm();
-  const [addExam, { data, loading, error }] = useMutation(ADD_EXAM);
+  const [addExam] = useMutation(ADD_EXAM);
+  const { data: exams, refetch } = useQuery(GET_EXAMS);
 
   const onSubmit = async (value) => {
     try {
@@ -27,19 +53,21 @@ export const Exams = () => {
         variables: {
           title: value.title,
           description: value.description,
+          author: value.author,
           authorId: value.author,
         },
       });
       reset();
+      refetch();
     } catch (err) {
-      console.error("Error adding MCQ:", err);
+      console.error("Error adding Exam:", err);
     }
   };
 
   return (
     <div className="my-14 mx-28">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="space-y-12">
+        <div className="space-y-12 bg-blue-50">
           <div className="p-10 border-b border-gray-900/10 pb-12 border rounded-lg border-gray-300">
             <h1 className="text-3xl font-semibold leading-7 text-gray-900 ">
               Create Exam
@@ -61,7 +89,7 @@ export const Exams = () => {
                       placeholder="Object Oriented Programming"
                       className={classNames(
                         errors.title ? "border-red-400" : "border-gray-300",
-                        "w-full block flex-1 border rounded-lg bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                        "w-full block flex-1 border bg-white rounded-lg bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                       )}
                     />
                     {errors.title && (
@@ -85,7 +113,7 @@ export const Exams = () => {
                       placeholder="Author"
                       className={classNames(
                         errors.author ? "border-red-400" : "border-gray-300",
-                        "w-full block flex-1 border rounded-lg bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                        "w-full block flex-1 border bg-white rounded-lg bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                       )}
                     />
                     {errors.author && (
@@ -131,6 +159,10 @@ export const Exams = () => {
           </div>
         </div>
       </form>
+      <h1 className="text-3xl font-semibold leading-7 text-gray-900 text-center m-16">
+        Exam List
+      </h1>
+      {exams && exams.getAllExams && <List items={exams.getAllExams} />}
     </div>
   );
 };

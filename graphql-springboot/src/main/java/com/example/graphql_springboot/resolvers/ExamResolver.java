@@ -18,6 +18,7 @@ public class ExamResolver {
 
     @QueryMapping
     public List<Exam> getAllExams() {
+        System.out.println("EMON getAllExams." + examRepository.findAll());
         return examRepository.findAll();
     }
 
@@ -34,17 +35,18 @@ public class ExamResolver {
     }
 
     @MutationMapping
-    public Exam addExam(@Argument String title, @Argument String description, @Argument String authorId) {
+    public Exam addExam(@Argument String title, @Argument String description, @Argument String author, @Argument String authorId) {
         Exam exam = new Exam();
         exam.setTitle(title);
         exam.setDescription(description);
+        exam.setAuthor(author);
         exam.setAuthorId(authorId);
 
         return examRepository.save(exam);
     }
 
     @MutationMapping
-    public Exam updateExam(@Argument String id, @Argument String title, @Argument String description, @Argument String authorId) throws Exception {
+    public Exam updateExam(@Argument String id, @Argument String title, @Argument String description, @Argument String author, @Argument String authorId) throws Exception {
         Exam exam = examRepository
                 .findById(id)
                 .orElseThrow(() -> new Exception("Exam not found by id: " + id));
@@ -54,6 +56,9 @@ public class ExamResolver {
         }
         if(description != null) {
             exam.setDescription(description);
+        }
+        if(author != null) {
+            exam.setAuthor(author);
         }
         if(authorId != null) {
             exam.setAuthorId(authorId);
