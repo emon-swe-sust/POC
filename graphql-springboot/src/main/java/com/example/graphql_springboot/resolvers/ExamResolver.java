@@ -18,7 +18,6 @@ public class ExamResolver {
 
     @QueryMapping
     public List<Exam> getAllExams() {
-        System.out.println("EMON getAllExams." + examRepository.findAll());
         return examRepository.findAll();
     }
 
@@ -50,7 +49,6 @@ public class ExamResolver {
         Exam exam = examRepository
                 .findById(id)
                 .orElseThrow(() -> new Exception("Exam not found by id: " + id));
-        System.out.println(exam);
         if(title != null) {
             exam.setTitle(title);
         }

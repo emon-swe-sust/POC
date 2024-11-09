@@ -162,7 +162,19 @@ export const Exams = () => {
       <h1 className="text-3xl font-semibold leading-7 text-gray-900 text-center m-16">
         Exam List
       </h1>
-      {exams && exams.getAllExams && <List items={exams.getAllExams} />}
+      {exams && exams.getAllExams && (
+        <List
+          items={exams.getAllExams}
+          buttons={[
+            {
+              label: "Participate",
+              onClick: (examId) => {
+                console.log("Button clicked ", examId);
+              },
+            },
+          ]}
+        />
+      )}
     </div>
   );
 };

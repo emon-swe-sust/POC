@@ -23,7 +23,6 @@ public class MCQResolver {
 
     @QueryMapping
     public List<MCQ> getMCQsByExamID(@Argument String examId) {
-        System.out.println("getMCQByExamId: " + examId);
         return mcqRepository.findByExamId(examId);
     }
 

@@ -3,6 +3,7 @@ import { classNames } from "./Nav";
 import { gql, useMutation, useQuery } from "@apollo/client";
 import { List } from "./List";
 import { useParams } from "react-router-dom";
+import { MCQs } from "./MCQs";
 const ADD_MCQ = gql`
   mutation Add_MCQ(
     $question: String!
@@ -48,7 +49,7 @@ const GET_EXAM = gql`
   }
 `;
 
-export const Exam = () => {
+export const ExamDetails = () => {
   const { examId } = useParams();
 
   const {
@@ -108,8 +109,9 @@ export const Exam = () => {
           Questions
         </h1>
         {questions && questions.getMCQsByExamID && (
-          <List
-            items={questions.getMCQsByExamID.map((mcq, index) => {
+          <MCQs
+            examId={examId}
+            mcqs={questions.getMCQsByExamID.map((mcq, index) => {
               return {
                 ...mcq,
                 title: `QS 1: ${mcq.question}`,

@@ -1,0 +1,20 @@
+type Answer {
+    id: ID!
+    examId: String!
+    examineeId: String
+    rightAnswers: [String]
+    wrongAnswers: [String]
+}
+
+input MCQAnswerInput {
+    mcqId: ID!
+    selectedAnswer: String!
+}
+
+extend type Mutation {
+    addAnswer (
+        examId: String!,
+        examineeId: String,
+        answers: [MCQAnswerInput!]!
+    ): Answer!
+}

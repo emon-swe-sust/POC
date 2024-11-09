@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { classNames } from "./Nav";
 
-export const List = ({ items }) => {
+export const List = ({ items, buttons }) => {
   const navigate = useNavigate();
   return (
     <div role="list" className="divide-y divide-gray-300 my-16">
@@ -21,23 +21,24 @@ export const List = ({ items }) => {
               <p className="text-lg font-semibold leading-6 text-gray-900">
                 {item.title}
               </p>
+
               <p className="mt-1 truncate text-xs leading-5 text-gray-500">
-                {item.description}
+                {item.description} - ( {item.author} )
               </p>
             </div>
           </div>
-          <div className="hidden shrink-0 sm:flex sm:flex-col sm:items-end">
-            <p className="text-sm leading-6 text-gray-900">{item.author}</p>
+          <div className="hidden shrink-0 sm:flex  sm:items-end sm:gap-2">
+            {buttons &&
+              buttons.map((button, index) => (
+                <button
+                  key={index}
+                  className="bg-indigo-700 px-6 py-1 rounded-md text-white text-sm hover:cursor-pointer hover:bg-indigo-500"
+                  onClick={() => button.onClick(item.id)}
+                >
+                  {button.label}
+                </button>
+              ))}
           </div>
-          {item.options &&
-            item.options.map((option, index) => {
-              const letter = String.fromCharCode(65 + index);
-              return (
-                <div className="w-full pl-16 leading-loose" key={index}>
-                  {letter}. {option}
-                </div>
-              );
-            })}
         </div>
       ))}
     </div>
