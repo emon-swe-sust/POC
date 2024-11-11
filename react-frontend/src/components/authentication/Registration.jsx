@@ -1,18 +1,77 @@
+import { gql, useMutation } from "@apollo/client";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Modal } from "../Modal";
+import { useNavigate } from "react-router-dom";
+
+const REGISTER_USER = gql`
+  mutation RegisterUser(
+    $username: String!
+    $email: String!
+    $role: String!
+    $password: String!
+  ) {
+    registerUser(
+      username: $username
+      email: $email
+      role: $role
+      password: $password
+    ) {
+      id
+      username
+      email
+      role
+      password
+    }
+  }
+`;
 
 export const Registration = () => {
   const {
     register,
     formState: { errors },
+    reset,
     handleSubmit,
   } = useForm();
+  const [registerUser] = useMutation(REGISTER_USER);
+  const [showModal, setShowModal] = useState(false);
+  const navigate = useNavigate();
 
-  const handleRegister = (value) => {
-    console.log(value);
+  const handleRegister = async (value) => {
+    try {
+      await registerUser({
+        variables: {
+          username: value.username,
+          email: value.email,
+          role: value.role,
+          password: value.password,
+        },
+      });
+      reset();
+      setShowModal(true);
+    } catch (err) {
+      console.error("Error on user registration:", err);
+    }
   };
 
   return (
     <section className="bg-white flex">
+      <Modal
+        open={showModal}
+        setOpen={setShowModal}
+        info={{
+          title: "Congratulations!",
+          details: `🎉 You're with us now!  🎉`,
+        }}
+        buttons={[
+          {
+            title: "Okay",
+            onClick: () => setShowModal(false),
+            textColor: "#fff",
+            bgColor: "#33cc66",
+          },
+        ]}
+      />
       <div className="w-full bg-gray-100 rounded-lg shadow sm:max-w-md xl:p-0 m-auto mt-20">
         <div className="p-6 space-y-4 md:space-y-6 sm:p-8 m-auto">
           <h1 className="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl ">
@@ -100,6 +159,7 @@ export const Registration = () => {
             <p className="text-sm font-light text-gray-500">
               Already have an account?{" "}
               <span
+                onClick={() => navigate("/login")}
                 href="#"
                 className="font-medium text-primary-600 hover:cursor-pointer text-indigo-600"
               >
