@@ -35,7 +35,6 @@ export const MCQs = ({ examId, mcqs }) => {
           answers: answers,
         },
       });
-      console.log(data.addAnswer.rightAnswers.length);
       setAnswerResult(data.addAnswer.rightAnswers.length);
       setShowModal(true);
     } catch (error) {

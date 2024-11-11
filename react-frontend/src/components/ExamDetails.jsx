@@ -168,7 +168,7 @@ export const ExamDetails = () => {
                       placeholder=""
                       className={classNames(
                         errors.optionA ? "border-red-400" : "border-gray-300",
-                        "w-full block flex-1 border bg-white rounded-lg bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                        "w-full px-4 block flex-1 border bg-white rounded-lg bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                       )}
                     />
                     {errors.optionA && (
@@ -192,7 +192,7 @@ export const ExamDetails = () => {
                       placeholder=""
                       className={classNames(
                         errors.title ? "border-red-400" : "border-gray-300",
-                        "w-full block flex-1 border bg-white rounded-lg bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                        "w-full px-4 block flex-1 border bg-white rounded-lg bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                       )}
                     />
                     {errors.optionB && (
@@ -218,7 +218,7 @@ export const ExamDetails = () => {
                       placeholder=""
                       className={classNames(
                         errors.optionC ? "border-red-400" : "border-gray-300",
-                        "w-full block flex-1 border bg-white rounded-lg bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                        "w-full px-4 block flex-1 border bg-white rounded-lg bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                       )}
                     />
                     {errors.optionC && (
@@ -242,7 +242,7 @@ export const ExamDetails = () => {
                       placeholder=""
                       className={classNames(
                         errors.optionD ? "border-red-400" : "border-gray-300",
-                        "w-full block flex-1 border bg-white rounded-lg bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                        "w-full px-4 block flex-1 border bg-white rounded-lg bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                       )}
                     />
                     {errors.optionD && (
@@ -268,7 +268,7 @@ export const ExamDetails = () => {
                     placeholder=""
                     className={classNames(
                       errors.author ? "border-red-400" : "border-gray-300",
-                      "w-full block flex-1 border bg-white rounded-lg bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+                      "w-full px-4 block flex-1 border bg-white rounded-lg bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
                     )}
                   />
                   {errors.answer && (

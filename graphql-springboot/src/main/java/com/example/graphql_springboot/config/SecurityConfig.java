@@ -15,13 +15,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    // .requestMatchers("/graphql").authenticated() // Require authentication for GraphQL endpoint
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable()) // Updated CSRF configuration
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/graphql").authenticated() // Require authentication for GraphQL endpoint
+                        .requestMatchers("/graphql").permitAll() // Require authentication for GraphQL endpoint
                         .requestMatchers("/auth/**").permitAll() // Allow access to registration and login endpoints
                         .anyRequest().permitAll()
                 )
