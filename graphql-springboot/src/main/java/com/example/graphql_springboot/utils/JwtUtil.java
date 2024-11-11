@@ -9,7 +9,7 @@ import java.util.function.Function;
 @Component
 public class JwtUtil {
 
-    private final String SECRET_KEY = "your_secret_key";
+    private final String SECRET_KEY = "c2VjcmV0S2V5TmFtZT1qZGVxMndhZGlyMXtMdk1TbmxWcmFud1tkLqA9wz0Cg==";
 
     public String generateToken(String username) {
         return Jwts.builder()
@@ -21,20 +21,29 @@ public class JwtUtil {
     }
 
     public Boolean validateToken(String token, String username) {
-        return username.equals(extractUsername(token)) && !isTokenExpired(token);
-    }
+        try {
+            return username.equals(extractUsername(token)) && !isTokenExpired(token);
+        } catch (ExpiredJwtException | MalformedJwtException | SignatureException e) {
+            return false;
+        }    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
-        final Claims claims = Jwts.parser()
-                .setSigningKey(SECRET_KEY) // Use the same secret key as when generating the token
-                .build() // Build the parser
-                .parseClaimsJws(token) // Parse the token
-                .getBody(); // Extract the claims
-        return claimsResolver.apply(claims);
+        try {
+            final Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(SECRET_KEY) // Use the same secret key as when generating the token
+                    .build()
+                    .parseClaimsJwt(token) // Correct method for parsing JWT
+                    .getBody(); // Extract the claims
+            return claimsResolver.apply(claims);
+        } catch (Exception e) {
+            // Debugging the token string
+            System.out.println("Error decoding JWT: " + e.getMessage());
+            throw new RuntimeException("JWT decoding error", e);
+        }
     }
 
     private Boolean isTokenExpired(String token) {

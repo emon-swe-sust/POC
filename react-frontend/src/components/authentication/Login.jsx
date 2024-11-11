@@ -1,6 +1,13 @@
 import { useForm } from "react-hook-form";
 import { classNames } from "../Nav";
 import { useNavigate } from "react-router-dom";
+import { gql, useMutation } from "@apollo/client";
+
+const LOGIN_USER = gql`
+  mutation LoginUser($username: String!, $password: String!) {
+    loginUser(username: $username, password: $password)
+  }
+`;
 
 export const Login = () => {
   const {
@@ -8,11 +15,23 @@ export const Login = () => {
     formState: { errors },
     handleSubmit,
   } = useForm();
+  const [loginUser] = useMutation(LOGIN_USER);
 
   const navigate = useNavigate();
 
   const handleLogin = async (value) => {
     console.log(value);
+    try {
+      await loginUser({
+        variables: {
+          username: value.username,
+          password: value.password,
+        },
+      });
+      navigate("/exams");
+    } catch (err) {
+      console.error("Error on Login:", err);
+    }
   };
 
   return (

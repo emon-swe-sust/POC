@@ -3,7 +3,7 @@ package com.example.graphql_springboot.resolvers;
 
 import com.example.graphql_springboot.model.User;
 import com.example.graphql_springboot.repository.UserRepository;
-import com.example.graphql_springboot.service.AuthService;
+//import com.example.graphql_springboot.service.AuthService;
 import com.example.graphql_springboot.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -30,8 +30,8 @@ public class AuthResolver {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-    @Autowired
-    private AuthService authService;
+//    @Autowired
+//    private AuthService authService;
 
     @MutationMapping
     public User registerUser(@Argument String username, @Argument String email, @Argument String role, @Argument String password) {
@@ -47,11 +47,12 @@ public class AuthResolver {
     @MutationMapping
     public String loginUser(@Argument String username, @Argument String password) {
         try {
-//            Authentication authenticate = authenticationManager.authenticate(
-//                    new UsernamePasswordAuthenticationToken(username, password)
-            return authService.authenticateUser(username, password);
+            Authentication authenticate = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(username, password));
 
-//            return jwtUtil.generateToken(username);
+            String token = jwtUtil.generateToken(username);
+
+            return token;
         } catch (AuthenticationException e) {
             throw new RuntimeException("Invalid credentials");
         }
