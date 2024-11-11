@@ -1,8 +1,8 @@
 package com.example.graphql_springboot.resolvers;
 
 
-import com.example.graphql_springboot.model.Person;
-import com.example.graphql_springboot.repository.PersonRepository;
+import com.example.graphql_springboot.model.User;
+import com.example.graphql_springboot.repository.UserRepository;
 import com.example.graphql_springboot.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
@@ -18,7 +18,7 @@ import org.springframework.stereotype.Controller;
 public class AuthResolver {
 
     @Autowired
-    private PersonRepository personRepository;
+    private UserRepository userRepository;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
@@ -31,10 +31,10 @@ public class AuthResolver {
 
     @MutationMapping
     public String registerUser(@Argument String username, @Argument String password) {
-        Person person = new Person();
-        person.setUsername(username);
-        person.setPassword(passwordEncoder.encode(password));
-        personRepository.save(person);
+        User user = new User();
+        user.setUsername(username);
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
         return "User registered successfully";
     }
 

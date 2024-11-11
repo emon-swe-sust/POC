@@ -1,7 +1,7 @@
 package com.example.graphql_springboot.resolvers;
 
-import com.example.graphql_springboot.model.Person;
-import com.example.graphql_springboot.repository.PersonRepository;
+import com.example.graphql_springboot.model.User;
+import com.example.graphql_springboot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
@@ -11,29 +11,29 @@ import org.springframework.stereotype.Controller;
 import java.util.List;
 
 @Controller
-public class PersonResolver {
+public class UserResolver {
 
     @Autowired
-    public PersonRepository userRepository;
+    public UserRepository userRepository;
 
     @QueryMapping
-    public Person getUserById(String id) throws Exception {
+    public User getUserById(String id) throws Exception {
         return userRepository.
                 findById(id)
                 .orElseThrow(() -> new Exception("User not found with id: " + id));
     }
 
     @QueryMapping
-    public List<Person> getAllUsers() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     @MutationMapping
-    public Person addUser(@Argument  String name, @Argument String email) {
-        Person person = new Person();
-        person.setUsername(name);
-        person.setEmail(email);
+    public User addUser(@Argument  String name, @Argument String email) {
+        User user = new User();
+        user.setUsername(name);
+        user.setEmail(email);
 
-        return userRepository.save(person);
+        return userRepository.save(user);
     }
 }
