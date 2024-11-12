@@ -11,9 +11,10 @@ public class JwtUtil {
 
     private final String SECRET_KEY = "c2VjcmV0S2V5TmFtZT1qZGVxMndhZGlyMXtMdk1TbmxWcmFud1tkLqA9wz0Cg==";
 
-    public String generateToken(String username) {
+    public String generateToken(String username, String role) {
         return Jwts.builder()
                 .setSubject(username)
+                .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)
@@ -30,13 +31,16 @@ public class JwtUtil {
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("role", String.class));
+    }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         try {
             final Claims claims = Jwts.parserBuilder()
                     .setSigningKey(SECRET_KEY) // Use the same secret key as when generating the token
                     .build()
-                    .parseClaimsJwt(token) // Correct method for parsing JWT
+                    .parseClaimsJws(token) // Correct method for parsing JWT
                     .getBody(); // Extract the claims
             return claimsResolver.apply(claims);
         } catch (Exception e) {

@@ -30,9 +30,6 @@ public class AuthResolver {
     @Autowired
     private AuthenticationManager authenticationManager;
 
-//    @Autowired
-//    private AuthService authService;
-
     @MutationMapping
     public User registerUser(@Argument String username, @Argument String email, @Argument String role, @Argument String password) {
         User user = new User();
@@ -50,7 +47,8 @@ public class AuthResolver {
             Authentication authenticate = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(username, password));
 
-            String token = jwtUtil.generateToken(username);
+            User user = userRepository.findByUsername(username);
+            String token = jwtUtil.generateToken(username, user.getRole());
 
             return token;
         } catch (AuthenticationException e) {
