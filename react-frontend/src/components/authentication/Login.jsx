@@ -2,6 +2,8 @@ import { useForm } from "react-hook-form";
 import { classNames } from "../Nav";
 import { useNavigate } from "react-router-dom";
 import { gql, useMutation } from "@apollo/client";
+import { jwtDecode } from "jwt-decode";
+import { useState } from "react";
 
 const LOGIN_USER = gql`
   mutation LoginUser($username: String!, $password: String!) {
@@ -16,21 +18,27 @@ export const Login = () => {
     handleSubmit,
   } = useForm();
   const [loginUser] = useMutation(LOGIN_USER);
+  const [invalidCredentials, setInvalidCredentials] = useState(false);
 
   const navigate = useNavigate();
 
   const handleLogin = async (value) => {
-    console.log(value);
     try {
-      await loginUser({
+      const response = await loginUser({
         variables: {
           username: value.username,
           password: value.password,
         },
       });
+      const token = response.data.loginUser;
+      const { sub, role } = jwtDecode(token);
+      sessionStorage.setItem("token", token);
+      sessionStorage.setItem("username", sub);
+      sessionStorage.setItem("role", role);
+
       navigate("/exams");
     } catch (err) {
-      console.error("Error on Login:", err);
+      setInvalidCredentials(true);
     }
   };
 
@@ -66,7 +74,9 @@ export const Login = () => {
                   required
                   autoComplete="username"
                   className={classNames(
-                    errors.username ? "ring-red-700" : "ring-gray-300",
+                    errors.username || invalidCredentials
+                      ? "ring-red-700"
+                      : "ring-gray-300",
                     "block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                   )}
                 />
@@ -91,13 +101,17 @@ export const Login = () => {
                   required
                   autoComplete="current-password"
                   className={classNames(
-                    errors.password ? "ring-red-700" : "ring-gray-300",
+                    errors.password || invalidCredentials
+                      ? "ring-red-700"
+                      : "ring-gray-300",
                     "block px-4 w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm/6"
                   )}
                 />
               </div>
             </div>
-
+            {invalidCredentials && (
+              <p className="text-red-600 font-bold"> Invalid Credentials!</p>
+            )}
             <div>
               <button
                 type="submit"

@@ -11,12 +11,13 @@ const httpLink = createHttpLink({
 });
 
 const authLink = setContext((_, { headers }) => {
-  const token = sessionStorage.getItem("authToken");
+  const token = sessionStorage.getItem("token");
   return {
     headers: {
       ...headers,
-      authorization: token ? `Bearer ${token}` : "",
+      Authorization: token ? `Bearer ${token}` : "",
     },
+    Credential: "include",
   };
 });
 
