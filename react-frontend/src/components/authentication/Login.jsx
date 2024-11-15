@@ -3,7 +3,8 @@ import { classNames } from "../Nav";
 import { useNavigate } from "react-router-dom";
 import { gql, useMutation } from "@apollo/client";
 import { jwtDecode } from "jwt-decode";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { isAuthenticate } from "../utils/isAuthenticate";
 
 const LOGIN_USER = gql`
   mutation LoginUser($username: String!, $password: String!) {
@@ -19,8 +20,15 @@ export const Login = () => {
   } = useForm();
   const [loginUser] = useMutation(LOGIN_USER);
   const [invalidCredentials, setInvalidCredentials] = useState(false);
+  const authentic = isAuthenticate();
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (authentic) {
+      navigate("/exams");
+    }
+  });
 
   const handleLogin = async (value) => {
     try {
@@ -31,9 +39,10 @@ export const Login = () => {
         },
       });
       const token = response.data.loginUser;
-      const { sub, role } = jwtDecode(token);
+      const { sub, role, userId } = jwtDecode(token);
       sessionStorage.setItem("token", token);
       sessionStorage.setItem("username", sub);
+      sessionStorage.setItem("userId", userId);
       sessionStorage.setItem("role", role);
 
       navigate("/exams");

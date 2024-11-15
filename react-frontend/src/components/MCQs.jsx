@@ -25,13 +25,15 @@ export const MCQs = ({ examId, mcqs }) => {
 
   const [answers, setAnswers] = useState(initialAnswers);
   const [answerResult, setAnswerResult] = useState();
+  const role = sessionStorage.getItem("role");
+  const userId = sessionStorage.getItem("userId");
 
   const submitAnswer = async () => {
     try {
       const { data } = await addAnswer({
         variables: {
           examId: examId,
-          examineeId: "testUser",
+          examineeId: userId,
           answers: answers,
         },
       });
@@ -102,12 +104,14 @@ export const MCQs = ({ examId, mcqs }) => {
             })}
         </div>
       ))}
-      <button
-        className="bg-green-600 hover:cursor-pointer hover:bg-green-500 text-white mt-10 font-semibold py-2 px-10 w-full rounded-md"
-        onClick={() => submitAnswer()}
-      >
-        Submit
-      </button>
+      {role === "student" && (
+        <button
+          className="bg-green-600 hover:cursor-pointer hover:bg-green-500 text-white mt-10 font-semibold py-2 px-10 w-full rounded-md"
+          onClick={() => submitAnswer()}
+        >
+          Submit
+        </button>
+      )}
     </div>
   );
 };

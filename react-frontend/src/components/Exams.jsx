@@ -4,7 +4,8 @@ import { gql, useMutation, useQuery } from "@apollo/client";
 import { List } from "./List";
 import { isAuthenticate } from "./utils/isAuthenticate";
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Modal } from "./Modal";
 
 const ADD_EXAM = gql`
   mutation AddExam(
@@ -40,6 +41,18 @@ const GET_EXAMS = gql`
   }
 `;
 
+const GET_EXAMS_BY_AUTHOR_ID = gql`
+  query GetExamsByAuthorId($authorId: String!) {
+    getExamsByAuthorId(authorId: $authorId) {
+      id
+      title
+      description
+      author
+      authorId
+    }
+  }
+`;
+
 export const Exams = () => {
   const {
     register,
@@ -48,8 +61,18 @@ export const Exams = () => {
     reset,
   } = useForm();
   const [addExam] = useMutation(ADD_EXAM);
-  const { data: exams, refetch } = useQuery(GET_EXAMS);
+  const userId = sessionStorage.getItem("userId");
+  const role = sessionStorage.getItem("role");
+  const { data: exams, refetch } = useQuery(
+    role === "teacher" ? GET_EXAMS_BY_AUTHOR_ID : GET_EXAMS,
+    {
+      variables: {
+        authorId: userId,
+      },
+    }
+  );
   const isTeacher = sessionStorage.getItem("role") === "teacher";
+  const [showModal, setShowModal] = useState(false);
 
   const authentic = isAuthenticate();
   const navigate = useNavigate();
@@ -66,10 +89,12 @@ export const Exams = () => {
         variables: {
           title: value.title,
           description: value.description,
-          author: value.author,
-          authorId: value.author,
+          author: sessionStorage.getItem("username"),
+          authorId: sessionStorage.getItem("userId"),
         },
       });
+      setShowModal(true);
+
       reset();
       refetch();
     } catch (err) {
@@ -79,6 +104,23 @@ export const Exams = () => {
 
   return (
     <div className="my-14 mx-28">
+      <Modal
+        open={showModal}
+        setOpen={setShowModal}
+        info={{
+          title: "Congratulations!",
+          details: `Exam Added`,
+        }}
+        buttons={[
+          {
+            title: "Okay",
+            onClick: () => setShowModal(false),
+            textColor: "#fff",
+            bgColor: "#33cc66",
+          },
+        ]}
+      />
+      ;
       {isTeacher && (
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-12 bg-blue-50">
@@ -108,30 +150,6 @@ export const Exams = () => {
                       />
                       {errors.title && (
                         <p className="text-red-700">{errors.title.message}</p>
-                      )}
-                    </div>
-                  </div>
-                  <div className="w-full">
-                    <label
-                      htmlFor="username"
-                      className="block text-sm font-medium leading-6 text-gray-900"
-                    >
-                      Author
-                    </label>
-                    <div className="mt-2">
-                      <input
-                        type="text"
-                        {...register("author", {
-                          required: "Author is required",
-                        })}
-                        placeholder="Author"
-                        className={classNames(
-                          errors.author ? "border-red-400" : "border-gray-300",
-                          "w-full px-4 block flex-1 border bg-white rounded-lg bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                        )}
-                      />
-                      {errors.author && (
-                        <p className="text-red-700">{errors.author.message}</p>
                       )}
                     </div>
                   </div>
@@ -181,12 +199,14 @@ export const Exams = () => {
       <h1 className="text-3xl font-semibold leading-7 text-gray-900 text-center m-16">
         Exam List
       </h1>
-      {exams && exams.getAllExams && (
+      {exams && (exams.getAllExams || exams.getExamsByAuthorId) && (
         <List
-          items={exams.getAllExams}
+          items={
+            role === "student" ? exams.getAllExams : exams.getExamsByAuthorId
+          }
           buttons={[
             {
-              label: "Participate",
+              label: role === "student" ? "Participate" : "View",
               onClick: (examId) => {},
             },
           ]}

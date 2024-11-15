@@ -60,7 +60,7 @@ export const ExamDetails = () => {
     reset,
   } = useForm();
   const [addMCQ] = useMutation(ADD_MCQ);
-  const isTeacher = sessionStorage.getItem("role") === "teacher";
+  const role = sessionStorage.getItem("role");
 
   const authentic = isAuthenticate();
   const navigate = useNavigate();
@@ -131,7 +131,7 @@ export const ExamDetails = () => {
           />
         )}
       </div>
-      {isTeacher && (
+      {role === "teacher" && (
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-12 bg-violet-50">
             <div className="p-10 border-b border-gray-900/10 pb-12 border rounded-lg border-gray-300">

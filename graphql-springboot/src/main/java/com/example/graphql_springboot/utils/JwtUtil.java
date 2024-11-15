@@ -11,10 +11,11 @@ public class JwtUtil {
 
     private final String SECRET_KEY = "c2VjcmV0S2V5TmFtZT1qZGVxMndhZGlyMXtMdk1TbmxWcmFud1tkLqA9wz0Cg==";
 
-    public String generateToken(String username, String role) {
+    public String generateToken(String username, String role, String userId) {
         return Jwts.builder()
                 .setSubject(username)
                 .claim("role", role)
+                .claim("userId", userId)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
                 .signWith(SignatureAlgorithm.HS256, SECRET_KEY)

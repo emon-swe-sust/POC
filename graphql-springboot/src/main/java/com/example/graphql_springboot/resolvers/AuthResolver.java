@@ -48,7 +48,7 @@ public class AuthResolver {
                     new UsernamePasswordAuthenticationToken(username, password));
 
             User user = userRepository.findByUsername(username);
-            String token = jwtUtil.generateToken(username, user.getRole());
+            String token = jwtUtil.generateToken(username, user.getRole(), user.getId());
 
             return token;
         } catch (AuthenticationException e) {

@@ -1,8 +1,9 @@
 import { gql, useMutation } from "@apollo/client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Modal } from "../Modal";
 import { useNavigate } from "react-router-dom";
+import { isAuthenticate } from "../utils/isAuthenticate";
 
 const REGISTER_USER = gql`
   mutation RegisterUser(
@@ -35,7 +36,15 @@ export const Registration = () => {
   } = useForm();
   const [registerUser] = useMutation(REGISTER_USER);
   const [showModal, setShowModal] = useState(false);
+  const authentic = isAuthenticate();
+
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (authentic) {
+      navigate("/exams");
+    }
+  });
 
   const handleRegister = async (value) => {
     try {

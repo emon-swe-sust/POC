@@ -26,6 +26,7 @@ function RouterComponent() {
     <div className="App">
       {!shouldHideNav && <Nav />}
       <Routes>
+        <Route path="/" element={<Exams />} />
         <Route path="/create-question" element={<CreateQuestion />} />
         <Route path="/exams" element={<Exams />} />
         <Route path="/login" element={<Login />} />
