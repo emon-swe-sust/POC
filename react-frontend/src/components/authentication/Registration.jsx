@@ -1,9 +1,11 @@
-import { gql, useMutation } from "@apollo/client";
+import { gql, useLazyQuery, useMutation } from "@apollo/client";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { Modal } from "../Modal";
 import { useNavigate } from "react-router-dom";
 import { isAuthenticate } from "../utils/isAuthenticate";
+import { debounce } from "lodash";
+import { classNames } from "../Nav";
 
 const REGISTER_USER = gql`
   mutation RegisterUser(
@@ -27,16 +29,25 @@ const REGISTER_USER = gql`
   }
 `;
 
+const IS_USERNAME_EXISTS = gql`
+  query IsUserNameExists($username: String!) {
+    isUserNameExists(username: $username)
+  }
+`;
+
 export const Registration = () => {
   const {
     register,
     formState: { errors },
     reset,
     handleSubmit,
+    setError,
+    clearErrors,
   } = useForm();
   const [registerUser] = useMutation(REGISTER_USER);
   const [showModal, setShowModal] = useState(false);
   const authentic = isAuthenticate();
+  const [IsUserNameExists] = useLazyQuery(IS_USERNAME_EXISTS);
 
   const navigate = useNavigate();
 
@@ -45,6 +56,24 @@ export const Registration = () => {
       navigate("/exams");
     }
   });
+
+  const debouncedCheckUsername = debounce(async (username) => {
+    const { data } = await IsUserNameExists({ variables: { username } });
+
+    if (data?.isUserNameExists) {
+      setError("username", {
+        type: "manual",
+        message: "Username already exists.",
+      });
+    } else {
+      clearErrors("username");
+    }
+  }, 500);
+
+  const handleUsernameChange = (e) => {
+    const username = e.target.value;
+    debouncedCheckUsername(username);
+  };
 
   const handleRegister = async (value) => {
     try {
@@ -103,10 +132,17 @@ export const Registration = () => {
                 type="username"
                 name="username"
                 id="username"
-                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                className={classNames(
+                  errors.username ? "border-red-300" : "border-gray-300",
+                  "bg-gray-50 border  text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5"
+                )}
                 placeholder="Username"
                 required
+                onChange={(e) => handleUsernameChange(e)}
               />
+              {errors.username && (
+                <p className="text-red-500">Username already exists</p>
+              )}
             </div>
             <div>
               <label

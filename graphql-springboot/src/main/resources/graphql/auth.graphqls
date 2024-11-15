@@ -2,3 +2,7 @@ extend type Mutation {
     registerUser(username: String!, email: String!, role: String!, password: String!): User
     loginUser(username: String!, password: String!): String
 }
+
+extend type Query {
+    isUserNameExists(username: String!): Boolean
+}

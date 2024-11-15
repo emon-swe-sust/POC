@@ -8,6 +8,7 @@ import com.example.graphql_springboot.utils.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.graphql.data.method.annotation.Argument;
 import org.springframework.graphql.data.method.annotation.MutationMapping;
+import org.springframework.graphql.data.method.annotation.QueryMapping;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -53,6 +54,16 @@ public class AuthResolver {
             return token;
         } catch (AuthenticationException e) {
             throw new RuntimeException("Invalid credentials");
+        }
+    }
+
+    @QueryMapping
+    public Boolean isUserNameExists(@Argument String username) {
+        User user = userRepository.findByUsername(username);
+        if(user == null) {
+            return false;
+        } else {
+            return true;
         }
     }
 
