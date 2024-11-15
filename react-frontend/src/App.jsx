@@ -1,11 +1,10 @@
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import ApolloClientProvider from "./configuration/ApolloClient";
-import { CreateQuestion } from "./components/CreateQuestion";
-import { Exams } from "./components/Exams";
+import { Exams } from "./pages/Exams";
 import { Nav } from "./components/Nav";
-import { ExamDetails } from "./components/ExamDetails";
-import { Login } from "./components/authentication/Login";
-import { Registration } from "./components/authentication/Registration";
+import { ExamDetails } from "./pages/ExamDetails";
+import { Login } from "./pages/authentication/Login";
+import { Registration } from "./pages/authentication/Registration";
 function App() {
   return (
     <ApolloClientProvider>
@@ -27,7 +26,6 @@ function RouterComponent() {
       {!shouldHideNav && <Nav />}
       <Routes>
         <Route path="/" element={<Exams />} />
-        <Route path="/create-question" element={<CreateQuestion />} />
         <Route path="/exams" element={<Exams />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registration" element={<Registration />} />
