@@ -6,7 +6,7 @@ import {
 } from "@headlessui/react";
 import { InformationCircleIcon } from "@heroicons/react/24/outline";
 
-export const Modal = ({ open, setOpen, info, buttons }) => {
+export const Modal = ({ open, setOpen, info, buttons, children }) => {
   return (
     <Dialog open={open} onClose={setOpen} className="relative z-10">
       <DialogBackdrop
@@ -41,6 +41,7 @@ export const Modal = ({ open, setOpen, info, buttons }) => {
                 </div>
               </div>
             </div>
+            {children && <div className="my-8">{children}</div>}
             <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
               {buttons.map((button, index) => (
                 <button

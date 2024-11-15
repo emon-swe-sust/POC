@@ -2,6 +2,7 @@ type Answer {
     id: ID!
     examId: String!
     examineeId: String
+    examineeName: String
     rightAnswers: [String]
     wrongAnswers: [String]
 }
@@ -17,4 +18,8 @@ extend type Mutation {
         examineeId: String,
         answers: [MCQAnswerInput!]!
     ): Answer!
+}
+
+extend type Query {
+    getExamResultByExamId(examId: String!): [Answer!]
 }

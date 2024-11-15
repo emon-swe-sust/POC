@@ -13,6 +13,7 @@ public class Answer {
     private String id;
     private String examId;
     private String examineeId;
+    private String examineeName;
     private List<String> rightAnswers;
     private List<String> wrongAnswers;
 }
