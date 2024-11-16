@@ -5,6 +5,7 @@ import { Nav } from "./components/Nav";
 import { ExamDetails } from "./pages/ExamDetails";
 import { Login } from "./pages/authentication/Login";
 import { Registration } from "./pages/authentication/Registration";
+import { Profile } from "./pages/Profile";
 function App() {
   return (
     <ApolloClientProvider>
@@ -26,6 +27,7 @@ function RouterComponent() {
       {!shouldHideNav && <Nav />}
       <Routes>
         <Route path="/" element={<Exams />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/exams" element={<Exams />} />
         <Route path="/login" element={<Login />} />
         <Route path="/registration" element={<Registration />} />
