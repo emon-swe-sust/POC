@@ -1,6 +1,9 @@
 type User {
     id: ID!
     username: String!
+    fullName: String
+    regNo: String
+    department: String
     email: String!
     role: String
     password: String!
@@ -12,5 +15,4 @@ type Query {
 }
 
 type Mutation {
-    addUser(name: String!, email: String!): User
 }

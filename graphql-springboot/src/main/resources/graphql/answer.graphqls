@@ -3,6 +3,7 @@ type Answer {
     examId: String!
     examineeId: String
     examineeName: String
+    examTitle: String
     rightAnswers: [String]
     wrongAnswers: [String]
 }
@@ -22,4 +23,5 @@ extend type Mutation {
 
 extend type Query {
     getExamResultByExamId(examId: String!): [Answer!]
+    getExamResultByExamineeId(examineeId: String!): [Answer!]
 }

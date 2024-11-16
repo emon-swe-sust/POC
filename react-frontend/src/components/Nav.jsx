@@ -102,6 +102,14 @@ export const Nav = () => {
                 <MenuItem>
                   <div
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 hover:cursor-pointer"
+                    onClick={() => navigate("/profile")}
+                  >
+                    My Profile
+                  </div>
+                </MenuItem>
+                <MenuItem>
+                  <div
+                    className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100 hover:cursor-pointer"
                     onClick={handleLogOut}
                   >
                     Sign out

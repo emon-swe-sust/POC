@@ -14,6 +14,7 @@ public class Answer {
     private String examId;
     private String examineeId;
     private String examineeName;
+    private String examTitle;
     private List<String> rightAnswers;
     private List<String> wrongAnswers;
 }

@@ -1,10 +1,8 @@
 package com.example.graphql_springboot.resolvers;
 
-import com.example.graphql_springboot.model.Answer;
-import com.example.graphql_springboot.model.MCQ;
-import com.example.graphql_springboot.model.MCQAnswerInput;
-import com.example.graphql_springboot.model.User;
+import com.example.graphql_springboot.model.*;
 import com.example.graphql_springboot.repository.AnswerRepository;
+import com.example.graphql_springboot.repository.ExamRepository;
 import com.example.graphql_springboot.repository.MCQRepository;
 import com.example.graphql_springboot.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +25,10 @@ public class AnswerResolver {
     @Autowired
     public UserRepository userRepository;
 
+    @Autowired
+    public ExamRepository examRepository;
+
+
     @MutationMapping
     public Answer addAnswer(@Argument String examId, @Argument String examineeId, @Argument List<MCQAnswerInput> answers) throws Exception{
         List<String> rightAnswers = new ArrayList<>();
@@ -34,6 +36,9 @@ public class AnswerResolver {
 
         User user = userRepository.findById(examineeId)
                 .orElseThrow(() -> new Exception("User not found with ID: " + examineeId));
+
+        Exam exam = examRepository.findById(examId)
+                .orElseThrow(() -> new Exception("Exam not found with Id: " + examId));
 
         List<MCQ> mcqs = mcqRepository.findByExamId(examId);
 
@@ -56,6 +61,7 @@ public class AnswerResolver {
         answer.setExamineeName(user.getUsername());
         answer.setRightAnswers(rightAnswers);
         answer.setWrongAnswers(wrongAnswers);
+        answer.setExamTitle(exam.getTitle());
 
         return answerRepository.save(answer);
     }
@@ -63,6 +69,12 @@ public class AnswerResolver {
     @QueryMapping
     public List<Answer> getExamResultByExamId(@Argument String examId) {
         List<Answer> examResults = answerRepository.findByExamId(examId);
+        return examResults;
+    }
+
+    @QueryMapping
+    public List<Answer> getExamResultByExamineeId(@Argument String examineeId) {
+        List<Answer> examResults = answerRepository.findByExamineeId(examineeId);
         return examResults;
     }
 }

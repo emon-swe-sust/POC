@@ -1,5 +1,5 @@
 extend type Mutation {
-    registerUser(username: String!, email: String!, role: String!, password: String!): User
+    registerUser(username: String!, email: String!, role: String!, password: String!, fullName: String!, regNo: String!, department: String!): User
     loginUser(username: String!, password: String!): String
 }
 

@@ -17,7 +17,7 @@ public class UserResolver {
     public UserRepository userRepository;
 
     @QueryMapping
-    public User getUserById(String id) throws Exception {
+    public User getUserById(@Argument String id) throws Exception {
         return userRepository.
                 findById(id)
                 .orElseThrow(() -> new Exception("User not found with id: " + id));
@@ -26,14 +26,5 @@ public class UserResolver {
     @QueryMapping
     public List<User> getAllUsers() {
         return userRepository.findAll();
-    }
-
-    @MutationMapping
-    public User addUser(@Argument  String name, @Argument String email) {
-        User user = new User();
-        user.setUsername(name);
-        user.setEmail(email);
-
-        return userRepository.save(user);
     }
 }

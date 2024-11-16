@@ -32,11 +32,16 @@ public class AuthResolver {
     private AuthenticationManager authenticationManager;
 
     @MutationMapping
-    public User registerUser(@Argument String username, @Argument String email, @Argument String role, @Argument String password) {
+    public User registerUser(@Argument String username, @Argument String email, @Argument String role,
+                             @Argument String password, @Argument String fullName, @Argument String regNo,
+                             @Argument String department) {
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
         user.setRole(role);
+        user.setFullName(fullName);
+        user.setRegNo(regNo);
+        user.setDepartment(department);
         user.setEmail(email);
         userRepository.save(user);
         return user;

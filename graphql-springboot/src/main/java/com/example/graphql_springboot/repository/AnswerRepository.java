@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface AnswerRepository extends MongoRepository<Answer, String> {
     List<Answer> findByExamId(String examId);
+    List<Answer> findByExamineeId(String examineeId);
 }
