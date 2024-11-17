@@ -60,6 +60,7 @@ export const ExamDetails = () => {
     formState: { errors },
     handleSubmit,
     reset,
+    watch,
   } = useForm();
   const [addMCQ] = useMutation(ADD_MCQ);
   const role = sessionStorage.getItem("role");
@@ -306,17 +307,24 @@ export const ExamDetails = () => {
                     Correct Answer
                   </label>
                   <div className="mt-2">
-                    <input
-                      type="text"
-                      {...register("answer", {
-                        required: "Correct answer is required",
-                      })}
-                      placeholder=""
-                      className={classNames(
-                        errors.author ? "border-red-400" : "border-gray-300",
-                        "w-full px-4 block flex-1 border bg-white rounded-lg bg-transparent py-1.5 pl-1 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
-                      )}
-                    />
+                    <select
+                      {...register("answer")}
+                      className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5"
+                      defaultValue={watch("optionB")}
+                    >
+                      <option value={watch("optionA")}>
+                        {watch("optionA")}
+                      </option>
+                      <option value={watch("optionB")}>
+                        {watch("optionB")}
+                      </option>
+                      <option value={watch("optionC")}>
+                        {watch("optionC")}
+                      </option>
+                      <option value={watch("optionD")}>
+                        {watch("optionD")}
+                      </option>
+                    </select>
                     {errors.answer && (
                       <p className="text-red-700">{errors.answer.message}</p>
                     )}

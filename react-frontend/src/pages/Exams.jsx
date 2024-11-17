@@ -132,7 +132,6 @@ export const Exams = () => {
           },
         ]}
       />
-      ;
       {isTeacher && (
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="space-y-12 bg-blue-50">

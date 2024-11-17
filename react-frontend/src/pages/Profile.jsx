@@ -1,5 +1,8 @@
 import { gql, useQuery } from "@apollo/client";
 import { PaperClipIcon } from "@heroicons/react/24/outline";
+import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import { isAuthenticate } from "../utils/isAuthenticate";
 
 const GET_USER_BY_ID = gql`
   query GetUserById($id: String!) {
@@ -37,6 +40,15 @@ export const Profile = () => {
   });
   const profile = userProfile?.getUserById;
   const examResult = result?.getExamResultByExamineeId;
+
+  const authentic = isAuthenticate();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!authentic) {
+      navigate("/login");
+    }
+  }, []);
   return (
     <div className="m-20 py-10 px-40">
       <div className="px-4 sm:px-0">
@@ -80,39 +92,43 @@ export const Profile = () => {
               {profile?.regNo}
             </dd>
           </div>
-          <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 ">
-            <dt className="text-sm/6 font-medium text-gray-900">Exam result</dt>
-            <dd className="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
-              <ul
-                role="list"
-                className="max-h-[300px] overflow-y-auto divide-y divide-gray-100 rounded-md border border-gray-200"
-              >
-                {examResult ? (
-                  examResult.map((result, index) => (
-                    <li
-                      key={index}
-                      className="flex items-center justify-between py-4 pl-4 pr-5 text-sm/6"
-                    >
-                      <div className="flex w-0 flex-1 items-center">
-                        <div className="ml-4 flex min-w-0 flex-1 gap-2">
-                          <span className="truncate font-medium">
-                            {result.examTitle}
-                          </span>
+          {profile?.role === "student" && (
+            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0 ">
+              <dt className="text-sm/6 font-medium text-gray-900">
+                Exam result
+              </dt>
+              <dd className="mt-2 text-sm text-gray-900 sm:col-span-2 sm:mt-0">
+                <ul
+                  role="list"
+                  className="max-h-[300px] overflow-y-auto divide-y divide-gray-100 rounded-md border border-gray-200"
+                >
+                  {examResult ? (
+                    examResult.map((result, index) => (
+                      <li
+                        key={index}
+                        className="flex items-center justify-between py-4 pl-4 pr-5 text-sm/6"
+                      >
+                        <div className="flex w-0 flex-1 items-center">
+                          <div className="ml-4 flex min-w-0 flex-1 gap-2">
+                            <span className="truncate font-medium">
+                              {result.examTitle}
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                      <div className="ml-4 shrink-0">
-                        <p className="font-medium text-indigo-600 hover:text-indigo-500">
-                          {result.rightAnswers.length}
-                        </p>
-                      </div>
-                    </li>
-                  ))
-                ) : (
-                  <div>No exam found</div>
-                )}
-              </ul>
-            </dd>
-          </div>
+                        <div className="ml-4 shrink-0">
+                          <p className="font-medium text-indigo-600 hover:text-indigo-500">
+                            {result.rightAnswers.length}
+                          </p>
+                        </div>
+                      </li>
+                    ))
+                  ) : (
+                    <div>No exam found</div>
+                  )}
+                </ul>
+              </dd>
+            </div>
+          )}
         </dl>
       </div>
     </div>
